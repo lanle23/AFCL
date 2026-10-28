@@ -1,0 +1,7 @@
+numpy>=1.24
+scipy>=1.10
+# Only needed for the real image benchmarks (feature extraction):
+torch>=2.0
+torchvision>=0.15
+# Only needed for the test suite:
+pytest>=7.0
