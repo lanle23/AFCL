@@ -46,11 +46,64 @@ Each client uploads exactly `(Ŵ_k, W̌_k, R_k)` — `O(l_e² + l_e·d_k)` float
 
 ## Install & run
 
+### 1. Create a virtual environment
+
+Recommended — `torch` + `torchvision` pull in a couple of GB of CUDA wheels, which you
+do not want in your system Python.
+
+**Linux / macOS**
+
 ```bash
-pip install numpy scipy            # core engine
-pip install torch torchvision      # only for real-image benchmarks
-pip install pytest                 # only for the test suite
+cd afcl-reimplementation
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
 ```
+
+**Windows (PowerShell)**
+
+```powershell
+cd afcl-reimplementation
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+```
+
+Deactivate with `deactivate`. To start over, delete `.venv` and repeat.
+
+<details>
+<summary>conda instead of venv</summary>
+
+```bash
+conda create -n afcl python=3.11 -y
+conda activate afcl
+```
+</details>
+
+### 2. Install dependencies
+
+```bash
+# Everything at once
+pip install -r requirements.txt
+
+# Or minimally — the core engine and its tests need no torch at all
+pip install numpy scipy pytest
+```
+
+`torch` / `torchvision` are needed **only** to extract features from real images
+(`--dataset cifar100 | tiny-imagenet | imagenet-r`). They are imported lazily, so the
+whole test suite and `--dataset synthetic` run on numpy + scipy alone. For a CPU-only
+machine, the much smaller build is:
+
+```bash
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+```
+
+Python 3.9+ is required (the code uses `X | None` annotations under
+`from __future__ import annotations`).
+
+### 3. Run
+
 
 ```bash
 # No download needed — synthetic features, exercises the whole pipeline
